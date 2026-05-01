@@ -1,129 +1,27 @@
-name: Download and Split
+name: Download and Split Model
 
 on:
   workflow_dispatch:
 
 jobs:
-  download:
+  download-and-split:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Download file from Hugging Face
         run: |
           curl -L -o model.bin "https://huggingface.co/Qwen/Qwen3-Embedding-4B-GGUF/resolve/main/Qwen3-Embedding-4B-f16.gguf"
 
       - name: Split into 300MB parts
         run: |
-          mkdir parts
+          mkdir -p parts
           split -b 300m model.bin parts/part_
 
-      - name: Upload each part separately
-        run: |
-          for f in parts/*; do
-            name=$(basename "$f")
-            echo "Uploading $name"
-            echo "::group::$name"
-            tar -czf "$name.tar.gz" -C parts "$name"
-            echo "::endgroup::"
-            echo "::notice::Uploaded $name"
-            echo "::set-output name=artifact::$name"
-            echo "::set-output name=file::$f"
-            echo "::set-output name=tar::$name.tar.gz"
-            echo "::set-output name=name::$name"
-            echo "::set-output name=path::$name.tar.gz"
-            echo "::set-output name=upload::$name.tar.gz"
-            echo "::set-output name=upload_name::$name"
-            echo "::set-output name=upload_path::$name.tar.gz"
-            echo "::set-output name=upload_file::$name.tar.gz"
-            echo "::set-output name=upload_artifact::$name"
-            echo "::set-output name=upload_artifact_path::$name.tar.gz"
-            echo "::set-output name=upload_artifact_name::$name"
-            echo "::set-output name=upload_artifact_file::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_path::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name::$name"
-            echo "::set-output name=upload_artifact_file_name_path::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_path::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name::$name"
-            echo "::set-output name=upload_artifact_file_name_file_name_path::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_path::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name::$name"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_path::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_path::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name::$name"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_path::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_path::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name::$name"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_path::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_path::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name::$name"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_path::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_path::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name::$name"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_path::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_path::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name::$name"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_path::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_path::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name::$name"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_path::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_path::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name::$name"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_path::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_path::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name::$name"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_path::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_path::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name::$name"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_path::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_path::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name::$name"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_path::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_path::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name::$name"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_path::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_path::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name::$name"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_path::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_path::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name::$name"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_path::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_path::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name::$name"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_path::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_path::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name::$name"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_path::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_path::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name::$name"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_path::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_path::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name::$name"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_path::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_path::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name::$name"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_path::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_path::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name::$name"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_path::$name.tar.gz"
-            echo "::set-output name=upload_artifact_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file_name_file
-
+      - name: Upload each part as an artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: model-part-${{ github.run_id }}-${{ github.run_attempt }}
+          path: parts/
+          if-no-files-found: error
