@@ -1,11 +1,13 @@
-name: Download and Split2
+name: Download and Split3
 
 on:
   workflow_dispatch:
 
 jobs:
-  download:
+  split:
     runs-on: ubuntu-latest
+    outputs:
+      parts: ${{ steps.list.outputs.parts }}
     steps:
       - name: Download file from Hugging Face
         run: |
@@ -16,10 +18,25 @@ jobs:
           mkdir parts
           split -b 300m model.bin parts/part_
 
-      - name: Upload each part as separate artifact
+      - name: List parts
+        id: list
         run: |
-          for f in parts/*; do
-            name=$(basename "$f")
-            echo "Uploading $name"
-            gh upload-artifact "$name" "$f"
-          done
+          echo "parts=$(ls parts | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
+
+  upload:
+    needs: split
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        file: ${{ fromJson(needs.split.outputs.parts) }}
+    steps:
+      - name: Download split artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dummy # no artifact yet, just placeholder
+
+      - name: Upload part
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.file }}
+          path: parts/${{ matrix.file }}
