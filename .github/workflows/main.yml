@@ -1,0 +1,25 @@
+name: Download and Split2
+
+on:
+  workflow_dispatch:
+
+jobs:
+  download:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download file from Hugging Face
+        run: |
+          curl -L -o model.bin "https://huggingface.co/Qwen/Qwen3-Embedding-4B-GGUF/resolve/main/Qwen3-Embedding-4B-f16.gguf"
+
+      - name: Split into 300MB parts
+        run: |
+          mkdir parts
+          split -b 300m model.bin parts/part_
+
+      - name: Upload each part as separate artifact
+        run: |
+          for f in parts/*; do
+            name=$(basename "$f")
+            echo "Uploading $name"
+            gh upload-artifact "$name" "$f"
+          done
