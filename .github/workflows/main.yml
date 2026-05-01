@@ -20,7 +20,7 @@ jobs:
           split -b 300m model.bin parts/part_
 
       - name: Upload each part as an artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: model-part-${{ github.run_id }}-${{ github.run_attempt }}
           path: parts/
